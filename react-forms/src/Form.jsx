@@ -30,30 +30,60 @@ const Form=()=>{
                 errors.push("Select Phone Type");
             }
         }
-        if(user.bio.length > 280){
+        if(user.bio.length > 10){
             errors.push("Over character limit");
         }
+        return errors;
     }
+
+    const handleChange=(field)=>{
+        return  (event)=>{
+            const newObject = Object.assign({},user,{[field]: event.target.value});
+
+            setUser(newObject);
+        }
+    }   
+    
+    const handleSubmit = (event) =>{
+        console.log('submit')
+        event.preventDefault();
+        let errors= validate();
+        if(errors.length>0){
+            setErrors(errors);
+        }
+    }
+
+    const showErrors = () => {
+        if(!errors.length) {
+            return null
+        } 
+        return (
+            <ul>
+                {errors.map(err => <li>{err}</li>)}
+            </ul>
+        )
+    }
+    
 
     return(
         <>
         <h1>Registration Form</h1>
-
-        <form>
+        {showErrors()}
+        <form onSubmit={handleSubmit}>
             <label>Name
-                <input type='text' value=''></input>
+                <input type='text' value={user.name} onChange={handleChange('name')}></input>
             </label>
             <br></br>
             <label>Email
-                <input type='text' value=''></input>
+                <input type='text' value={user.email} onChange={handleChange('email')}></input>
             </label>
             <br></br>
-            <label>Phone Number
-                <input type='text' value=''></input>
+            <label>Phone Number (xxx-xxx-xxxx)
+                <input type='text' value={user.phone} onChange={handleChange('phone')}></input>
             </label>
             <br></br>
-            <label for='phone-select'>Staff</label>
-            <select name='phone' id='phone-select'>
+            <label htmlFor='phone-select'>Staff</label>
+            <select name='phone' id='phone-select' value={user.phonetype} onChange={handleChange('phonetype')}>
                 <option value=''>Select One</option>
                 <option value='Home'>Home</option>
                 <option value='Mobile'>Mobile</option>
@@ -61,18 +91,18 @@ const Form=()=>{
             </select>
             <br></br>
             <label>Instructor
-            <input type='radio' value='Instructor' name='staff'></input>
+            <input type='radio' name='staff' value={user.instructor} onChange={handleChange('instructor')}></input>
             Student
-            <input type='radio' value='Student'name='staff'></input>
+            <input type='radio' name='staff' value={user.instructor} onChange={handleChange('instructor')}></input>
             </label>
             <br></br>
             <label>Bio
-                <textarea id='bio' name='bio' rows='5' cols='33'></textarea>
+                <textarea id='bio' name='bio' rows='5' cols='33'value={user.bio} onChange={handleChange('bio')}></textarea>
             </label>
 
             <br></br>
             <label>Email Notifications?
-                <input type='checkbox' name='email' id='email'></input>
+                <input type='checkbox' name='email' id='email' value={user.newsletter} onChange={handleChange('newsletter')} ></input>
             </label>
             <br></br>
             <button>Submit</button>
